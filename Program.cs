@@ -22,10 +22,9 @@ namespace SearchAlgorithms {
         }
         
         private static void BFS(Node starPoint) {
-              
+            
         }
         
     }
-    
     
 }
