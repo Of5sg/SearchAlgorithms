@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SearchAlgorithms {
 
@@ -36,11 +37,17 @@ namespace SearchAlgorithms {
             return 0;
         }
         
-        private static char[] BFS(Node startPoint, int[] searchInts) {
+        private static Cell[] BFS(Node startPoint, int[] searchInts) {
 
-            char[] resultChars = new char[0];
+            Cell[] resultChars = new Cell[0];
             
-            // 3 12 72 = cat
+            List<Node> currentLayer = new List<Node>();
+            List<Node> nextLayer = new List<Node>();
+            
+            
+            
+            
+            
 
             return resultChars;
         }
