@@ -3,6 +3,16 @@
 namespace SearchAlgorithms {
 
     class Program {
+        
+        public struct Cell {
+            public int NodeID;
+            public char Character;
+            
+            public Cell(int id, char character) {
+                NodeID = id;
+                Character = character;
+            }
+        }
 
         public static int Main() {
 
@@ -17,10 +27,10 @@ namespace SearchAlgorithms {
             // Console.WriteLine("Down Left:\n\t" + startnode.Children[0].Value + "\n\t" + startnode.Children[0].Character);
             // Console.WriteLine("Down Right:\n\t" + startnode.Children[1].Value + "\n\t" + startnode.Children[1].Character);
             
-            char[] result = DFS(startnode, [12]);
+            Cell[] result = DFS(startnode, [12]);
             
-            foreach (char item in result) {
-                Console.Write(item);
+            foreach (Cell item in result) {
+                Console.Write("Cell: " + item.NodeID + " \tCharacter: " + item.Character + "\n");
             }
             
             return 0;
@@ -35,34 +45,36 @@ namespace SearchAlgorithms {
             return resultChars;
         }
 
-        private static char[] DFS(Node startPoint, int[] searchInts) {
-
-            char[] resultChars = [];
+        private static Cell[] DFS(Node startPoint, int[] searchInts) {
+            
+            Cell[] resultCells = [];
             
             Console.WriteLine("NodeID: " + startPoint.NodeID);
+            Console.WriteLine("Character: " + startPoint.Character + "\n");
             
             for (int i = 0; i < startPoint.Children.Count; i++) {
-                char[] childArray = DFS(startPoint.Children[i], searchInts);
+                Cell[] childArray = DFS(startPoint.Children[i], searchInts);
                 
                 if(childArray.Length > 0) {
-                    int position = resultChars.Length;
-                    Array.Resize(ref resultChars, resultChars.Length + childArray.Length);
-                    foreach (char character in childArray) {
-                        resultChars[position++] = character;
+                    int position = resultCells.Length;
+                    // resize array to size of array + size of child array
+                    Array.Resize(ref resultCells, resultCells.Length + childArray.Length);
+                    foreach (Cell resCell in childArray) {
+                        resultCells[position++] = resCell;
                     }
                 }
             }
             
             for (int i = 0; i < searchInts.Length; i++) {
                 if (startPoint.Value == searchInts[i]) {
-                    Array.Resize(ref resultChars, resultChars.Length + 1);
-                    resultChars[resultChars.Length - 1] = startPoint.Character;
+                    Array.Resize(ref resultCells, resultCells.Length + 1);
+                    resultCells[resultCells.Length - 1] = new Cell(startPoint.NodeID, startPoint.Character);
                 }
             }
             
             // 3 12 72 = cat
 
-            return resultChars;
+            return resultCells;
 
         }
     }
