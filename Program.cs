@@ -27,7 +27,7 @@ namespace SearchAlgorithms {
             Node startnode = TreeFactory.CreateNodeTree(6, characters, numbers);
             
             // doing depth-first search
-            Cell[] resultDFS = DFS(startnode, [12, 7]);
+            Cell[] resultDFS = DFS(startnode, [12, 4]);
             
             Console.WriteLine("DFS:");
             
@@ -36,7 +36,7 @@ namespace SearchAlgorithms {
             }
             
             // doing breadth-first search
-            Cell[] resultBFS = BFS(startnode, [12, 7]);
+            Cell[] resultBFS = BFS(startnode, ['c', 'd']);
             
             Console.WriteLine("BFS:");
             
@@ -46,6 +46,8 @@ namespace SearchAlgorithms {
             
             return 0;
         }
+        
+        // ---------- BFS ----------
         
         private static Cell[] BFS(Node startPoint, int[] searchInts) {
 
@@ -79,6 +81,41 @@ namespace SearchAlgorithms {
             
             return resultChars;
         }
+        
+        private static Cell[] BFS(Node startPoint, char[] searchChars) {
+
+            Cell[] resultChars = new Cell[0];
+
+            Queue<Node> nodeQueue = new Queue<Node>();
+            nodeQueue.Enqueue(startPoint);
+
+            Node node;
+            
+            do {
+
+                node = nodeQueue.Dequeue();
+                
+                for (int i = 0; i < searchChars.Length; i++) {
+
+                    if (node.Character == searchChars[i]) {
+                        Array.Resize(ref resultChars, resultChars.Length + 1);
+                        resultChars[^1] = new Cell(node.NodeID, node.Character, node.Value);
+                    }
+
+                }
+
+                foreach (Node child in node.Children) {
+                    
+                    nodeQueue.Enqueue(child);
+                    
+                }
+
+            } while (nodeQueue.Count > 0);
+            
+            return resultChars;
+        }
+        
+        // ---------- DFS ----------
 
         private static Cell[] DFS(Node startPoint, int[] searchInts) {
             
@@ -93,6 +130,34 @@ namespace SearchAlgorithms {
             
             for (int i = 0; i < startPoint.Children.Count; i++) {
                 Cell[] childArray = DFS(startPoint.Children[i], searchInts);
+                
+                if(childArray.Length > 0) {
+                    int position = resultCells.Length;
+                    // resize array to size of array + size of child array
+                    Array.Resize(ref resultCells, resultCells.Length + childArray.Length);
+                    foreach (Cell resCell in childArray) {
+                        resultCells[position++] = resCell;
+                    }
+                }
+            }
+
+            return resultCells;
+
+        }
+        
+        private static Cell[] DFS(Node startPoint, char[] searchChars) {
+            
+            Cell[] resultCells = [];
+            
+            for (int i = 0; i < searchChars.Length; i++) {
+                if (startPoint.Character == searchChars[i]) {
+                    Array.Resize(ref resultCells, resultCells.Length + 1);
+                    resultCells[^1] = new Cell(startPoint.NodeID, startPoint.Character, startPoint.Value);
+                }
+            }
+            
+            for (int i = 0; i < startPoint.Children.Count; i++) {
+                Cell[] childArray = DFS(startPoint.Children[i], searchChars);
                 
                 if(childArray.Length > 0) {
                     int position = resultCells.Length;
