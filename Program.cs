@@ -21,17 +21,25 @@ namespace SearchAlgorithms {
             
             int[] numbers = [12, 4, 3, 6, 7, 5, 8, 2, 11, 14, 67, 54, 32, 89, 71, 93, 42, 41, 63, 72, 75, 76, 82, 83, 19, 17];
             
+            // creating start node and node network
             Node startnode = TreeFactory.CreateNodeTree(6, characters, numbers);
             
-            // Console.WriteLine(startnode.Value + "\n" + startnode.Character);
-            //
-            // Console.WriteLine("Down Left:\n\t" + startnode.Children[0].Value + "\n\t" + startnode.Children[0].Character);
-            // Console.WriteLine("Down Right:\n\t" + startnode.Children[1].Value + "\n\t" + startnode.Children[1].Character);
+            // doing depth first search
+            Cell[] resultDFS = DFS(startnode, [12, 7]);
             
-            Cell[] result = DFS(startnode, [12]);
+            Console.WriteLine("DFS:");
             
-            foreach (Cell item in result) {
-                Console.Write("Cell: " + item.NodeID + " \tCharacter: " + item.Character + "\n");
+            foreach (Cell item in resultDFS) {
+                Console.Write("\tCell: " + item.NodeID + " \tCharacter: " + item.Character + "\n");
+            }
+            
+            // doing breadth first search
+            Cell[] resultBFS = BFS(startnode, [12, 7]);
+            
+            Console.WriteLine("BFS:");
+            
+            foreach (Cell item in resultBFS) {
+                Console.Write("\tCell: " + item.NodeID + " \tCharacter: " + item.Character + "\n");
             }
             
             return 0;
@@ -43,12 +51,35 @@ namespace SearchAlgorithms {
             
             List<Node> currentLayer = new List<Node>();
             List<Node> nextLayer = new List<Node>();
-            
-            
-            
-            
-            
 
+            currentLayer.Add(startPoint);
+
+            do {
+
+                foreach (Node node in currentLayer) {
+
+                    for (int i = 0; i < searchInts.Length; i++) {
+
+                        if (node.Value == searchInts[i]) {
+                            Array.Resize(ref resultChars, resultChars.Length + 1);
+                            resultChars[^1] = new Cell(node.NodeID, node.Character);
+                        }
+
+                    }
+
+                    foreach (Node child in node.Children) {
+
+                        nextLayer.Add(child);
+
+                    }
+
+                }
+
+                currentLayer = nextLayer;
+                nextLayer = [];
+
+            } while (currentLayer.Count != 0);
+            
             return resultChars;
         }
 
@@ -56,13 +87,10 @@ namespace SearchAlgorithms {
             
             Cell[] resultCells = [];
             
-            Console.WriteLine("NodeID: " + startPoint.NodeID);
-            Console.WriteLine("Character: " + startPoint.Character + "\n");
-            
             for (int i = 0; i < searchInts.Length; i++) {
                 if (startPoint.Value == searchInts[i]) {
                     Array.Resize(ref resultCells, resultCells.Length + 1);
-                    resultCells[resultCells.Length - 1] = new Cell(startPoint.NodeID, startPoint.Character);
+                    resultCells[^1] = new Cell(startPoint.NodeID, startPoint.Character);
                 }
             }
             
