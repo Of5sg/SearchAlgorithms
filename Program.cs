@@ -8,10 +8,12 @@ namespace SearchAlgorithms {
         public struct Cell {
             public int NodeID;
             public char Character;
+            public int Value;
             
-            public Cell(int id, char character) {
+            public Cell(int id, char character, int value) {
                 NodeID = id;
                 Character = character;
+                Value = value;
             }
         }
 
@@ -30,7 +32,7 @@ namespace SearchAlgorithms {
             Console.WriteLine("DFS:");
             
             foreach (Cell item in resultDFS) {
-                Console.Write("\tCell: " + item.NodeID + " \tCharacter: " + item.Character + "\n");
+                Console.Write("\tCell: " + item.NodeID + " \tCharacter: " + item.Character + "\tNumber: " + item.Value + "\n");
             }
             
             // doing breadth-first search
@@ -39,7 +41,7 @@ namespace SearchAlgorithms {
             Console.WriteLine("BFS:");
             
             foreach (Cell item in resultBFS) {
-                Console.Write("\tCell: " + item.NodeID + " \tCharacter: " + item.Character + "\n");
+                Console.Write("\tCell: " + item.NodeID + " \tCharacter: " + item.Character + "\tNumber: " + item.Value + "\n");
             }
             
             return 0;
@@ -62,7 +64,7 @@ namespace SearchAlgorithms {
 
                         if (node.Value == searchInts[i]) {
                             Array.Resize(ref resultChars, resultChars.Length + 1);
-                            resultChars[^1] = new Cell(node.NodeID, node.Character);
+                            resultChars[^1] = new Cell(node.NodeID, node.Character, node.Value);
                         }
 
                     }
@@ -90,7 +92,7 @@ namespace SearchAlgorithms {
             for (int i = 0; i < searchInts.Length; i++) {
                 if (startPoint.Value == searchInts[i]) {
                     Array.Resize(ref resultCells, resultCells.Length + 1);
-                    resultCells[^1] = new Cell(startPoint.NodeID, startPoint.Character);
+                    resultCells[^1] = new Cell(startPoint.NodeID, startPoint.Character, startPoint.Value);
                 }
             }
             
