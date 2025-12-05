@@ -50,37 +50,32 @@ namespace SearchAlgorithms {
         private static Cell[] BFS(Node startPoint, int[] searchInts) {
 
             Cell[] resultChars = new Cell[0];
+
+            Queue<Node> nodeQueue = new Queue<Node>();
+            nodeQueue.Enqueue(startPoint);
+
+            Node node;
             
-            List<Node> currentLayer = new List<Node>();
-            List<Node> nextLayer = new List<Node>();
-
-            currentLayer.Add(startPoint);
-
             do {
 
-                foreach (Node node in currentLayer) {
+                node = nodeQueue.Dequeue();
+                
+                for (int i = 0; i < searchInts.Length; i++) {
 
-                    for (int i = 0; i < searchInts.Length; i++) {
-
-                        if (node.Value == searchInts[i]) {
-                            Array.Resize(ref resultChars, resultChars.Length + 1);
-                            resultChars[^1] = new Cell(node.NodeID, node.Character, node.Value);
-                        }
-
-                    }
-
-                    foreach (Node child in node.Children) {
-
-                        nextLayer.Add(child);
-
+                    if (node.Value == searchInts[i]) {
+                        Array.Resize(ref resultChars, resultChars.Length + 1);
+                        resultChars[^1] = new Cell(node.NodeID, node.Character, node.Value);
                     }
 
                 }
 
-                currentLayer = nextLayer;
-                nextLayer = [];
+                foreach (Node child in node.Children) {
+                    
+                    nodeQueue.Enqueue(child);
+                    
+                }
 
-            } while (currentLayer.Count != 0);
+            } while (nodeQueue.Count > 0);
             
             return resultChars;
         }
