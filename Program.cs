@@ -24,7 +24,7 @@ namespace SearchAlgorithms {
             // creating start node and node network
             Node startnode = TreeFactory.CreateNodeTree(6, characters, numbers);
             
-            // doing depth first search
+            // doing depth-first search
             Cell[] resultDFS = DFS(startnode, [12, 7]);
             
             Console.WriteLine("DFS:");
@@ -33,7 +33,7 @@ namespace SearchAlgorithms {
                 Console.Write("\tCell: " + item.NodeID + " \tCharacter: " + item.Character + "\n");
             }
             
-            // doing breadth first search
+            // doing breadth-first search
             Cell[] resultBFS = BFS(startnode, [12, 7]);
             
             Console.WriteLine("BFS:");
