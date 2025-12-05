@@ -3,15 +3,17 @@
 using System.Collections.Generic;
 
 public class Node {
+    public readonly int NodeID;
     public readonly char Character;
     public readonly int Value;
     public Node? Parent;
     public List<Node> Children = [];
     
-    public Node(char character, int value, Node? parent) {
+    public Node(char character, int value, Node? parent, int nodeID) {
         Character = character;
         Value = value;
         Parent = parent;
+        NodeID = nodeID;
     }
     
 }
@@ -19,8 +21,10 @@ public class Node {
 public class TreeFactory {
     
     public static Node CreateNodeTree(int LayerDepth, char[] widthElements, int[] numbers) {
+        
+        int count = 0;
 
-        Node EntryNode = new Node('?', 0, null);
+        Node EntryNode = new Node('?', 0, null, count++);
 
         List<Node> currentLayerNodes = new List<Node>();
         List<Node> bottomLayerNodes = new List<Node>();
@@ -36,12 +40,14 @@ public class TreeFactory {
                 Node child1 = new Node(
                     widthElements[(icount % widthElements.Length)],
                     numbers[(icount++ % numbers.Length)],
-                    node
+                    node,
+                    count++
                     );
                 Node child2 = new Node(
                     widthElements[(icount % widthElements.Length)],
                     numbers[(icount++ % numbers.Length)],
-                    node
+                    node,
+                    count++
                     );
 
                 node.Children.Add(child1);
