@@ -1,5 +1,6 @@
 ﻿namespace SearchAlgorithms;
 
+using System.Collections.Generic;
 
 public class Node {
     public readonly char Character;
