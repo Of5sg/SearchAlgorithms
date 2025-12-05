@@ -14,8 +14,8 @@ namespace SearchAlgorithms {
             
             Console.WriteLine(startnode.Value + "\n" + startnode.Character);
             
-            Console.WriteLine("Down Left:\n\t" + startnode.Connections["dl"].Value + "\n\t" + startnode.Connections["dl"].Character);
-            Console.WriteLine("Down Right:\n\t" + startnode.Connections["dr"].Value + "\n\t" + startnode.Connections["dr"].Character);
+            Console.WriteLine("Down Left:\n\t" + startnode.Children[0].Value + "\n\t" + startnode.Children[0].Character);
+            Console.WriteLine("Down Right:\n\t" + startnode.Children[1].Value + "\n\t" + startnode.Children[1].Character);
             
             return 0;
         }
