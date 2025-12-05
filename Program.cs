@@ -52,6 +52,13 @@ namespace SearchAlgorithms {
             Console.WriteLine("NodeID: " + startPoint.NodeID);
             Console.WriteLine("Character: " + startPoint.Character + "\n");
             
+            for (int i = 0; i < searchInts.Length; i++) {
+                if (startPoint.Value == searchInts[i]) {
+                    Array.Resize(ref resultCells, resultCells.Length + 1);
+                    resultCells[resultCells.Length - 1] = new Cell(startPoint.NodeID, startPoint.Character);
+                }
+            }
+            
             for (int i = 0; i < startPoint.Children.Count; i++) {
                 Cell[] childArray = DFS(startPoint.Children[i], searchInts);
                 
@@ -64,15 +71,6 @@ namespace SearchAlgorithms {
                     }
                 }
             }
-            
-            for (int i = 0; i < searchInts.Length; i++) {
-                if (startPoint.Value == searchInts[i]) {
-                    Array.Resize(ref resultCells, resultCells.Length + 1);
-                    resultCells[resultCells.Length - 1] = new Cell(startPoint.NodeID, startPoint.Character);
-                }
-            }
-            
-            // 3 12 72 = cat
 
             return resultCells;
 
