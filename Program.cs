@@ -27,12 +27,22 @@ namespace SearchAlgorithms {
             Node startnode = TreeFactory.CreateNodeTree(6, characters, numbers);
             
             // doing depth-first search
-            List<Cell> resultDFS = DFS(startnode, [12, 4]);
+            List<object> resultDFS = DFS(startnode, [12]);
+            List<Cell> resultCells = (List<Cell>)resultDFS[0];
+            List<Cell[]> resultPaths = (List<Cell[]>)resultDFS[1];
             
             Console.WriteLine("DFS:");
             
-            foreach (Cell item in resultDFS) {
+            foreach (Cell item in resultCells) {
                 Console.Write("\tCell: " + item.NodeID + " \tCharacter: " + item.Character + "\tNumber: " + item.Value + "\n");
+            }
+            foreach (Cell[] path in resultPaths) {
+                Console.Write("Path to answer: ");
+                path.Reverse();
+                foreach (Cell entry in path) {
+                    Console.Write("-" + entry.NodeID);
+                }
+                Console.Write("\n");
             }
             
             // doing breadth-first search
@@ -117,7 +127,26 @@ namespace SearchAlgorithms {
         
         // ---------- DFS ----------
 
-        private static List<Cell> DFS(Node startPoint, int[] searchInts) {
+        private static List<object> DFS(Node startPoint, int[] searchInts, Stack<Cell>? pathStack = null, List<Cell[]>? listOfMatchingPaths = null) {
+            
+            // Add a stack to hold the path to the selected nodes
+            Stack<Cell> pathToMatch;
+            
+            if(pathStack == null) {
+                pathToMatch = new Stack<Cell>(6);
+            }else {
+                pathToMatch = pathStack;
+            }
+            
+            List<Cell[]> pathList;
+            
+            if(listOfMatchingPaths == null) {
+                pathList = new List<Cell[]>();
+            }else {
+                pathList = listOfMatchingPaths;
+            }
+
+            pathToMatch.Push(new Cell(startPoint.NodeID, startPoint.Character, startPoint.Value));
             
             List<Cell> resultCells = new List<Cell>();
             
@@ -129,24 +158,51 @@ namespace SearchAlgorithms {
                             startPoint.NodeID, 
                             startPoint.Character, 
                             startPoint.Value
-                            )
-                        );
+                        )
+                    );
+                    Cell[] resultingPath = [];
+                    Array.Resize(ref resultingPath, pathToMatch.Count);
+                    pathToMatch.CopyTo(resultingPath, 0);
+                    pathList.Add(resultingPath);
                 }
             }
             
             for (int i = 0; i < startPoint.Children.Count; i++) {
-                List<Cell> childArray = DFS(startPoint.Children[i], searchInts);
+                List<object> results = DFS(startPoint.Children[i], searchInts, pathToMatch, pathList);
+                List<Cell> childArray = (List<Cell>)results[0];
+                pathList = (List<Cell[]>)results[1];
                 
                 if(childArray.Count > 0) {
                     resultCells.AddRange(childArray);
                 }
             }
+            
+            pathToMatch.Pop();
 
-            return resultCells;
-
+            return new List<object>(){resultCells, pathList};
+            
         }
         
-        private static List<Cell> DFS(Node startPoint, char[] searchChars) {
+        private static List<object> DFS(Node startPoint, char[] searchChars, Stack<Cell>? pathStack = null, List<Cell[]>? listOfMatchingPaths = null) {
+            
+            // Add a stack to hold the path to the selected nodes
+            Stack<Cell> pathToMatch;
+            
+            if(pathStack == null) {
+                pathToMatch = new Stack<Cell>(6);
+            }else {
+                pathToMatch = pathStack;
+            }
+            
+            List<Cell[]> pathList;
+            
+            if(listOfMatchingPaths == null) {
+                pathList = new List<Cell[]>();
+            }else {
+                pathList = listOfMatchingPaths;
+            }
+
+            pathToMatch.Push(new Cell(startPoint.NodeID, startPoint.Character, startPoint.Value));
             
             List<Cell> resultCells = new List<Cell>();
             
@@ -160,18 +216,26 @@ namespace SearchAlgorithms {
                             startPoint.Value
                         )
                     );
+                    Cell[] resultingPath = [];
+                    Array.Resize(ref resultingPath, pathToMatch.Count);
+                    pathToMatch.CopyTo(resultingPath, 0);
+                    pathList.Add(resultingPath);
                 }
             }
             
             for (int i = 0; i < startPoint.Children.Count; i++) {
-                List<Cell> childArray = DFS(startPoint.Children[i], searchChars);
+                List<object> results = DFS(startPoint.Children[i], searchChars, pathToMatch, pathList);
+                List<Cell> childArray = (List<Cell>)results[0];
+                pathList = (List<Cell[]>)results[1];
                 
                 if(childArray.Count > 0) {
                     resultCells.AddRange(childArray);
                 }
             }
+            
+            pathToMatch.Pop();
 
-            return resultCells;
+            return new List<object>(){resultCells, pathList};
 
         }
     }
