@@ -16,6 +16,17 @@ namespace SearchAlgorithms {
                 Value = value;
             }
         }
+        
+        public struct Search_Results {
+            public List<Cell> resultCells;
+            public List<Cell[]> resultPaths;
+            
+            public Search_Results(List<Cell> resCells, List<Cell[]> paths) {
+                resultCells = resCells;
+                resultPaths = paths;
+            }
+            
+        }
 
         public static int Main() {
 
@@ -26,32 +37,41 @@ namespace SearchAlgorithms {
             // creating start node and node network
             Node startnode = TreeFactory.CreateNodeTree(6, characters, numbers);
             
-            // doing depth-first search
-            List<object> resultDFS = DFS(startnode, [12]);
-            List<Cell> resultCells = (List<Cell>)resultDFS[0];
-            List<Cell[]> resultPaths = (List<Cell[]>)resultDFS[1];
             
+            
+            // doing depth-first search
+            Search_Results resultDFS = DFS(startnode, [12]);
+            
+            // Logging results of Depth-first search
             Console.WriteLine("DFS:");
             
-            foreach (Cell item in resultCells) {
-                Console.Write("\tCell: " + item.NodeID + " \tCharacter: " + item.Character + "\tNumber: " + item.Value + "\n");
-            }
-            foreach (Cell[] path in resultPaths) {
-                Console.Write("Path to answer: ");
-                path.Reverse();
-                foreach (Cell entry in path) {
+            for (int i = 0; i < resultDFS.resultCells.Count; i++) {
+                
+                // Logging data for matching node
+                Console.Write("\tNode: " + resultDFS.resultCells[i].NodeID + 
+                              "\n\tCharacter: " + resultDFS.resultCells[i].Character + 
+                              "\n\tNumber: " + resultDFS.resultCells[i].Value + "\n");
+                
+                // Logging the path to the answer
+                Console.Write("\tPath to answer: ");
+                resultDFS.resultPaths[i].Reverse();
+                
+                foreach (Cell entry in resultDFS.resultPaths[i]) {
                     Console.Write("-" + entry.NodeID);
                 }
-                Console.Write("\n");
+                
+                Console.Write("\n\n");
+                
             }
-            
+
             // doing breadth-first search
             Cell[] resultBFS = BFS(startnode, ['c', 'd']);
             
+            // logging resuts of Depth-first search
             Console.WriteLine("BFS:");
             
             foreach (Cell item in resultBFS) {
-                Console.Write("\tCell: " + item.NodeID + " \tCharacter: " + item.Character + "\tNumber: " + item.Value + "\n");
+                Console.Write("\tNode: " + item.NodeID + " \tCharacter: " + item.Character + "\tNumber: " + item.Value + "\n");
             }
             
             return 0;
@@ -127,17 +147,25 @@ namespace SearchAlgorithms {
         
         // ---------- DFS ----------
 
-        private static List<object> DFS(Node startPoint, int[] searchInts, Stack<Cell>? pathStack = null, List<Cell[]>? listOfMatchingPaths = null) {
+        private static Search_Results DFS(Node startPoint, int[] searchInts, Stack<Cell>? pathStack = null, List<Cell[]>? listOfMatchingPaths = null) {
             
-            // Add a stack to hold the path to the selected nodes
+            
+            // stack to hold the path to the current node
             Stack<Cell> pathToMatch;
-            
+                
+                // initialize stack if it does not exist
             if(pathStack == null) {
                 pathToMatch = new Stack<Cell>(6);
             }else {
                 pathToMatch = pathStack;
             }
             
+                // adding current node to the stack
+            pathToMatch.Push(new Cell(startPoint.NodeID, startPoint.Character, startPoint.Value));
+            
+            
+            
+            // List of Cell arrays to hold the paths to matching Nodes
             List<Cell[]> pathList;
             
             if(listOfMatchingPaths == null) {
@@ -145,14 +173,17 @@ namespace SearchAlgorithms {
             }else {
                 pathList = listOfMatchingPaths;
             }
-
-            pathToMatch.Push(new Cell(startPoint.NodeID, startPoint.Character, startPoint.Value));
             
+            
+            
+            // the matching/resulting cells
             List<Cell> resultCells = new List<Cell>();
+            
             
             for (int i = 0; i < searchInts.Length; i++) {
                 
                 if (startPoint.Value == searchInts[i]) {
+                    // on match, add new Cell for current node
                     resultCells.Add(
                         new Cell(
                             startPoint.NodeID, 
@@ -160,40 +191,55 @@ namespace SearchAlgorithms {
                             startPoint.Value
                         )
                     );
-                    Cell[] resultingPath = [];
-                    Array.Resize(ref resultingPath, pathToMatch.Count);
+                    
+                    // on match copy current path to array
+                    
+                    Cell[] resultingPath = new Cell[pathToMatch.Count];
+                    
                     pathToMatch.CopyTo(resultingPath, 0);
+                    
+                    // add array to list of matching paths
                     pathList.Add(resultingPath);
                 }
             }
             
             for (int i = 0; i < startPoint.Children.Count; i++) {
-                List<object> results = DFS(startPoint.Children[i], searchInts, pathToMatch, pathList);
-                List<Cell> childArray = (List<Cell>)results[0];
-                pathList = (List<Cell[]>)results[1];
+                Search_Results results = DFS(startPoint.Children[i], searchInts, pathToMatch, pathList);
+
+                pathList = results.resultPaths;
                 
-                if(childArray.Count > 0) {
-                    resultCells.AddRange(childArray);
+                if(results.resultCells.Count > 0) {
+                    resultCells.AddRange(results.resultCells);
                 }
             }
             
+            // removing current node from the path stack
             pathToMatch.Pop();
-
-            return new List<object>(){resultCells, pathList};
+            
+            // return an instance of the results struct
+            return new Search_Results(resultCells, pathList);
             
         }
         
-        private static List<object> DFS(Node startPoint, char[] searchChars, Stack<Cell>? pathStack = null, List<Cell[]>? listOfMatchingPaths = null) {
+        private static Search_Results DFS(Node startPoint, char[] searchChars, Stack<Cell>? pathStack = null, List<Cell[]>? listOfMatchingPaths = null) {
             
-            // Add a stack to hold the path to the selected nodes
+            
+            // stack to hold the path to the current node
             Stack<Cell> pathToMatch;
-            
+                
+                // initialize stack if it does not exist
             if(pathStack == null) {
                 pathToMatch = new Stack<Cell>(6);
             }else {
                 pathToMatch = pathStack;
             }
             
+                // adding current node to the stack
+            pathToMatch.Push(new Cell(startPoint.NodeID, startPoint.Character, startPoint.Value));
+            
+            
+            
+            // List of Cell arrays to hold the paths to matching Nodes
             List<Cell[]> pathList;
             
             if(listOfMatchingPaths == null) {
@@ -201,14 +247,17 @@ namespace SearchAlgorithms {
             }else {
                 pathList = listOfMatchingPaths;
             }
-
-            pathToMatch.Push(new Cell(startPoint.NodeID, startPoint.Character, startPoint.Value));
             
+            
+            
+            // the matching/resulting cells
             List<Cell> resultCells = new List<Cell>();
+            
             
             for (int i = 0; i < searchChars.Length; i++) {
                 
                 if (startPoint.Character == searchChars[i]) {
+                    // on match, add new Cell for current node
                     resultCells.Add(
                         new Cell(
                             startPoint.NodeID, 
@@ -216,26 +265,33 @@ namespace SearchAlgorithms {
                             startPoint.Value
                         )
                     );
-                    Cell[] resultingPath = [];
-                    Array.Resize(ref resultingPath, pathToMatch.Count);
+                    
+                    // on match copy current path to array
+                    
+                    Cell[] resultingPath = new Cell[pathToMatch.Count];
+                    
                     pathToMatch.CopyTo(resultingPath, 0);
+                    
+                    // add array to list of matching paths
                     pathList.Add(resultingPath);
                 }
             }
             
             for (int i = 0; i < startPoint.Children.Count; i++) {
-                List<object> results = DFS(startPoint.Children[i], searchChars, pathToMatch, pathList);
-                List<Cell> childArray = (List<Cell>)results[0];
-                pathList = (List<Cell[]>)results[1];
+                Search_Results results = DFS(startPoint.Children[i], searchChars, pathToMatch, pathList);
+
+                pathList = results.resultPaths;
                 
-                if(childArray.Count > 0) {
-                    resultCells.AddRange(childArray);
+                if(results.resultCells.Count > 0) {
+                    resultCells.AddRange(results.resultCells);
                 }
             }
             
+            // removing current node from the path stack
             pathToMatch.Pop();
-
-            return new List<object>(){resultCells, pathList};
+            
+            // return an instance of the results struct
+            return new Search_Results(resultCells, pathList);
 
         }
     }
