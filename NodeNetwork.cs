@@ -1,6 +1,6 @@
-﻿namespace SearchAlgorithms;
+﻿using System.Collections.Generic;
 
-using System.Collections.Generic;
+namespace SearchAlgorithms;
 
 public class Node {
     public readonly int NodeID;
