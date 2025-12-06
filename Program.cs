@@ -27,7 +27,7 @@ namespace SearchAlgorithms {
             Node startnode = TreeFactory.CreateNodeTree(6, characters, numbers);
             
             // doing depth-first search
-            Cell[] resultDFS = DFS(startnode, [12, 4]);
+            List<Cell> resultDFS = DFS(startnode, [12, 4]);
             
             Console.WriteLine("DFS:");
             
@@ -117,27 +117,28 @@ namespace SearchAlgorithms {
         
         // ---------- DFS ----------
 
-        private static Cell[] DFS(Node startPoint, int[] searchInts) {
+        private static List<Cell> DFS(Node startPoint, int[] searchInts) {
             
-            Cell[] resultCells = [];
+            List<Cell> resultCells = new List<Cell>();
             
             for (int i = 0; i < searchInts.Length; i++) {
+                
                 if (startPoint.Value == searchInts[i]) {
-                    Array.Resize(ref resultCells, resultCells.Length + 1);
-                    resultCells[^1] = new Cell(startPoint.NodeID, startPoint.Character, startPoint.Value);
+                    resultCells.Add(
+                        new Cell(
+                            startPoint.NodeID, 
+                            startPoint.Character, 
+                            startPoint.Value
+                            )
+                        );
                 }
             }
             
             for (int i = 0; i < startPoint.Children.Count; i++) {
-                Cell[] childArray = DFS(startPoint.Children[i], searchInts);
+                List<Cell> childArray = DFS(startPoint.Children[i], searchInts);
                 
-                if(childArray.Length > 0) {
-                    int position = resultCells.Length;
-                    // resize array to size of array + size of child array
-                    Array.Resize(ref resultCells, resultCells.Length + childArray.Length);
-                    foreach (Cell resCell in childArray) {
-                        resultCells[position++] = resCell;
-                    }
+                if(childArray.Count > 0) {
+                    resultCells.AddRange(childArray);
                 }
             }
 
@@ -145,27 +146,28 @@ namespace SearchAlgorithms {
 
         }
         
-        private static Cell[] DFS(Node startPoint, char[] searchChars) {
+        private static List<Cell> DFS(Node startPoint, char[] searchChars) {
             
-            Cell[] resultCells = [];
+            List<Cell> resultCells = new List<Cell>();
             
             for (int i = 0; i < searchChars.Length; i++) {
+                
                 if (startPoint.Character == searchChars[i]) {
-                    Array.Resize(ref resultCells, resultCells.Length + 1);
-                    resultCells[^1] = new Cell(startPoint.NodeID, startPoint.Character, startPoint.Value);
+                    resultCells.Add(
+                        new Cell(
+                            startPoint.NodeID, 
+                            startPoint.Character, 
+                            startPoint.Value
+                        )
+                    );
                 }
             }
             
             for (int i = 0; i < startPoint.Children.Count; i++) {
-                Cell[] childArray = DFS(startPoint.Children[i], searchChars);
+                List<Cell> childArray = DFS(startPoint.Children[i], searchChars);
                 
-                if(childArray.Length > 0) {
-                    int position = resultCells.Length;
-                    // resize array to size of array + size of child array
-                    Array.Resize(ref resultCells, resultCells.Length + childArray.Length);
-                    foreach (Cell resCell in childArray) {
-                        resultCells[position++] = resCell;
-                    }
+                if(childArray.Count > 0) {
+                    resultCells.AddRange(childArray);
                 }
             }
 
