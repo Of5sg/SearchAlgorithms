@@ -291,7 +291,7 @@ namespace SearchAlgorithms {
                               "\n\tNumber: " + resultDFS.resultCells[i].Value + "\n");
                 
                 // Logging the path to the answer
-                Console.Write("\tPath to answer: ");
+                Console.Write("\tPath to Node: ");
                 resultDFS.resultPaths[i].Reverse();
                 
                 foreach (Cell entry in resultDFS.resultPaths[i]) {
