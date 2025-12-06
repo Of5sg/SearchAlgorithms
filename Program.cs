@@ -37,42 +37,15 @@ namespace SearchAlgorithms {
             // creating start node and node network
             Node startnode = TreeFactory.CreateNodeTree(6, characters, numbers);
             
-            
-            
             // doing depth-first search
             Search_Results resultDFS = DFS(startnode, [12]);
-            
-            // Logging results of Depth-first search
-            Console.WriteLine("DFS:");
-            
-            for (int i = 0; i < resultDFS.resultCells.Count; i++) {
-                
-                // Logging data for matching node
-                Console.Write("\tNode: " + resultDFS.resultCells[i].NodeID + 
-                              "\n\tCharacter: " + resultDFS.resultCells[i].Character + 
-                              "\n\tNumber: " + resultDFS.resultCells[i].Value + "\n");
-                
-                // Logging the path to the answer
-                Console.Write("\tPath to answer: ");
-                resultDFS.resultPaths[i].Reverse();
-                
-                foreach (Cell entry in resultDFS.resultPaths[i]) {
-                    Console.Write("-" + entry.NodeID);
-                }
-                
-                Console.Write("\n\n");
-                
-            }
+            // logging results of DFS
+            DFSLogger(resultDFS);
 
             // doing breadth-first search
             Cell[] resultBFS = BFS(startnode, ['c', 'd']);
-            
-            // logging resuts of Depth-first search
-            Console.WriteLine("BFS:");
-            
-            foreach (Cell item in resultBFS) {
-                Console.Write("\tNode: " + item.NodeID + " \tCharacter: " + item.Character + "\tNumber: " + item.Value + "\n");
-            }
+            // logging resuts of BFS
+            BFSLogger(resultBFS);
             
             return 0;
         }
@@ -143,6 +116,16 @@ namespace SearchAlgorithms {
             } while (nodeQueue.Count > 0);
             
             return resultChars;
+        }
+        
+        private static void BFSLogger(Cell[] resultBFS) {
+            
+            Console.WriteLine("BFS:");
+            
+            foreach (Cell item in resultBFS) {
+                Console.Write("\tNode: " + item.NodeID + " \tCharacter: " + item.Character + "\tNumber: " + item.Value + "\n");
+            }
+            
         }
         
         // ---------- DFS ----------
@@ -294,5 +277,33 @@ namespace SearchAlgorithms {
             return new Search_Results(resultCells, pathList);
 
         }
+        
+        private static void DFSLogger(Search_Results resultDFS) {
+            
+            // Logging results of Depth-first search
+            Console.WriteLine("DFS:");
+            
+            for (int i = 0; i < resultDFS.resultCells.Count; i++) {
+                
+                // Logging data for matching node
+                Console.Write("\tNode: " + resultDFS.resultCells[i].NodeID + 
+                              "\n\tCharacter: " + resultDFS.resultCells[i].Character + 
+                              "\n\tNumber: " + resultDFS.resultCells[i].Value + "\n");
+                
+                // Logging the path to the answer
+                Console.Write("\tPath to answer: ");
+                resultDFS.resultPaths[i].Reverse();
+                
+                foreach (Cell entry in resultDFS.resultPaths[i]) {
+                    Console.Write("-" + entry.NodeID);
+                }
+                
+                Console.Write("\n\n");
+                
+            }
+            
+        }
+        
     }
+    
 }
